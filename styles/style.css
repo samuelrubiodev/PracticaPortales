@@ -1,0 +1,26 @@
+body {
+    background-color: #676564;
+}
+
+.menu-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    border: 2px solid black;
+    width: 15%;
+}
+
+.reloj-temporal {
+    text-align: center;
+}
+
+#boton-portal {
+    width: 60%;
+    height: 10%
+}
+
+#boton-portal:hover {
+    background-color: #cbc6c3;
+}
