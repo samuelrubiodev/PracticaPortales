@@ -1,15 +1,24 @@
+let botonPortal = document.querySelector("#boton-portal");
+let mensaje = document.querySelector("#mensaje");
+let panelViajes = document.querySelector(".viajes");
+let areaPortales = document.querySelector(".area-portales");
+
 function actualizarFecha() {
     let fecha = document.querySelector("#fecha-actual");
 
     const date = new Date();
 
     fecha.textContent = date.toISOString();
+
+    if (areaPortales.childNodes.length - 1 >= 5) {
+        mensaje.textContent = "¡Límite de energía temporal alcanzado!";
+    } else {
+        mensaje.textContent = "";
+    }
 }
 
 setInterval(actualizarFecha, 1000);
 actualizarFecha();
-
-let botonPortal = document.querySelector("#boton-portal");
 
 botonPortal.addEventListener("click",generarPortal);
 
@@ -29,10 +38,7 @@ const colores = [
 ];
 
 function generarPortal() {
-    let areaPortales = document.querySelector(".area-portales");
-
     if (areaPortales.childNodes.length - 1 >= 5) {
-        alert("No se pueden crear mas de 5 portales");
         return;
     }
 
@@ -52,11 +58,76 @@ function generarPortal() {
     const color3 = getNumeroAleatorio(1,colores.length);
 
     let div = document.createElement("div");
+    div.setAttribute("idportal",numero);
     div.setAttribute("class","portal");
 
     div.style.background = "linear-gradient(90deg, " + colores[color1] + " 10%, " + colores[color2] + " 59%, " + colores[color3] + " 96%)";
 
     areaPortales.appendChild(div);
+    mensaje.textContent = "";
+
+    div.addEventListener("click",()=>{
+        if (panelViajes.childNodes.length > 0) {
+            panelViajes.removeChild(panelViajes.childNodes[0]);
+        }
+
+        seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, numero);
+    });
+}
+
+function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) {
+    console.log("Nombre: " + nombreCompleto);
+    console.log("Fecha destino: " + fechaAleatoria);
+
+    panelViajes.setAttribute("class","panel-viajes");
+
+    let div = document.createElement("div");
+    div.setAttribute("id","portal-viaje")
+
+    let titulo = document.createElement("h1");
+
+    titulo.textContent = nombreCompleto;
+
+    let fechaDestino = document.createElement("h4");
+
+    fechaDestino.textContent = fechaAleatoria;
+
+    let textarea = document.createElement("textarea");
+
+    textarea.setAttribute("name","nota");
+    textarea.setAttribute("id","nota");
+    textarea.setAttribute("cols","50");
+    textarea.setAttribute("rows","10");
+
+    let br = document.createElement("br");
+
+    let boton = document.createElement("button");
+    boton.setAttribute("type","button");
+    boton.setAttribute("id","boton-cerrar-portal");
+    boton.textContent = "Cerrar portal";
+
+    div.appendChild(titulo);
+    div.appendChild(fechaDestino);
+    div.appendChild(textarea);
+    div.appendChild(br);
+    div.appendChild(boton);
+
+    panelViajes.appendChild(div);
+
+    boton.addEventListener("click",()=> {
+        eliminarPortal(idportal)
+        panelViajes.removeChild(panelViajes.childNodes[0]);
+    });
+}
+
+function eliminarPortal(idportal) {
+    for (let childNode of areaPortales.childNodes) {
+        if (childNode.nodeType == 1) {
+            if (childNode.getAttribute("idportal") == idportal) {
+                areaPortales.removeChild(childNode);
+            }
+        } 
+    }
 }
 
 
