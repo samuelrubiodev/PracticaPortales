@@ -63,6 +63,8 @@ function generarPortal() {
 
     let div = document.createElement("div");
     div.setAttribute("idportal",numero);
+    div.setAttribute("nombre", nombreCompleto);
+    div.setAttribute("fechaDestino",fechaAleatoria);
     div.setAttribute("class","portal");
 
     div.style.background = "linear-gradient(90deg, " + colores[color1] + " 10%, " + colores[color2] + " 59%, " + colores[color3] + " 96%)";
@@ -70,19 +72,23 @@ function generarPortal() {
     areaPortales.appendChild(div);
     mensaje.textContent = "";
 
+    console.log("Se ha creado el portal: " + nombreCompleto);
+
     let portal = new Portal(nombreCompleto,fechaAleatoria, numero);
     portales.push(portal);
 
     div.addEventListener("click",()=>{
-        if (panelViajes.childNodes.length > 0) {
-            panelViajes.removeChild(panelViajes.childNodes[0]);
+        let panelActual = panelViajes.querySelector("#portal-viaje");
+        if (panelActual) {
+            panelActual.remove(); 
         }
 
-        seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, numero);
+        seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, div.getAttribute("idportal"));
     });
 }
 
 function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) {
+    console.log("Seleccionado el portal: " + nombreCompleto + " con ID " + idportal + " y con  fecha de destino: " + fechaAleatoria);
     panelViajes.setAttribute("class","panel-viajes");
 
     let div = document.createElement("div");
@@ -117,28 +123,22 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) 
     botonViajar.setAttribute("id","boton-viajar-portal");
     botonViajar.textContent = "Viajar";
 
-    let botonGuardar = document.createElement("button");
-    botonGuardar.setAttribute("type","button");
-    botonViajar.setAttribute("id","boton-guardar-portal");
-    botonGuardar.textContent = "Guardar nota";
-
     div.appendChild(titulo);
     div.appendChild(fechaDestino);
     div.appendChild(textarea);
     div.appendChild(br);
-    div.appendChild(botonGuardar);
     div.appendChild(botonViajar);
     div.appendChild(botonEliminar);
 
     panelViajes.appendChild(div);
-
-    botonGuardar.addEventListener("click", ()=> {
-        guardarNota(idportal, textarea.value)
+    textarea.addEventListener("change", ()=>{
+        guardarNota(idportal, textarea.value);
     });
 
     botonEliminar.addEventListener("click",()=> {
-        eliminarPortal(idportal)
-        panelViajes.removeChild(panelViajes.childNodes[0]);
+        console.log("Se va ha eliminar el portal: " + nombreCompleto)
+        eliminarPortal(idportal);
+        div.remove();
     });
 
     botonViajar.addEventListener("click",()=> {
@@ -150,6 +150,7 @@ function guardarNota(idPortal, nuevaNota) {
     for (let portal of portales) {
         if (portal.getIdPortal() == idPortal) {
             portal.setNota(nuevaNota);
+            console.log(portal.getNota());
         }
     }
 }
@@ -161,6 +162,8 @@ function eliminarPortal(idportal) {
             if (childNode.getAttribute("idportal") == idportal) {
                 areaPortales.removeChild(childNode);
                 seHaViajado = false;
+                console.log("Se ha eliminado el portal: " + idportal)
+                break;
             }
         } 
     }
@@ -172,7 +175,14 @@ function viajar(fechaPortal) {
     seHaViajado = true;
 }
 
+function anomalias() {
+
+}
+
+setInterval(anomalias,30000);
+
 
 function getNumeroAleatorio(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
 }
+
