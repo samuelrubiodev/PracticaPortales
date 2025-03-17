@@ -9,7 +9,6 @@ body {
     justify-content: center;
     height: 70vh;
     border: 2px solid black;
-    width: 15%;
 }
 
 .reloj-temporal {
@@ -23,4 +22,16 @@ body {
 
 #boton-portal:hover {
     background-color: #cbc6c3;
+}
+
+.area-portales {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.portal {
+    border-radius: 90%;
+    height: 7em;
+    width: 7em;
+    margin:1.2em 0.5em;
 }
