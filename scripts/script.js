@@ -6,6 +6,10 @@ let areaPortales = document.querySelector(".area-portales");
 let fecha = document.querySelector("#fecha-actual");
 let seHaViajado = false;
 
+let inversionTemporal = false;
+let portalInestable = false;
+let paradojaVisual = false;
+
 function actualizarFecha() {
     const date = new Date();
     if (!seHaViajado) {
@@ -51,15 +55,10 @@ function generarPortal() {
 
     let nombreCompleto = nombreInicial + "-" + numero;
 
-    const anio3000AC = -3000 * 365.25 * 24 * 60 * 60 * 1000;
-    const anio3000DC = 3000 * 365.25 * 24 * 60 * 60 * 1000;
+    let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
+    let fechaFin = new Date(Date.UTC(3000, 11, 31));
 
-    const fechaElegida = getNumeroAleatorio(anio3000AC,anio3000DC);
-    let fechaAleatoria = new Date(fechaElegida);
-
-    const color1 = getNumeroAleatorio(1,colores.length);
-    const color2 = getNumeroAleatorio(1,colores.length);
-    const color3 = getNumeroAleatorio(1,colores.length);
+    const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
 
     let div = document.createElement("div");
     div.setAttribute("idportal",numero);
@@ -67,7 +66,7 @@ function generarPortal() {
     div.setAttribute("fechaDestino",fechaAleatoria);
     div.setAttribute("class","portal");
 
-    div.style.background = "linear-gradient(90deg, " + colores[color1] + " 10%, " + colores[color2] + " 59%, " + colores[color3] + " 96%)";
+    div.style.background = getColor();
 
     areaPortales.appendChild(div);
     mensaje.textContent = "";
@@ -146,6 +145,14 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) 
     });
 }
 
+function getColor() {
+    const color1 = getNumeroAleatorio(1,colores.length - 1);
+    const color2 = getNumeroAleatorio(1,colores.length - 1);
+    const color3 = getNumeroAleatorio(1,colores.length - 1);
+
+    return "linear-gradient(90deg, " + colores[color1] + " 10%, " + colores[color2] + " 59%, " + colores[color3] + " 96%)";
+}
+
 function guardarNota(idPortal, nuevaNota) {
     for (let portal of portales) {
         if (portal.getIdPortal() == idPortal) {
@@ -175,14 +182,79 @@ function viajar(fechaPortal) {
     seHaViajado = true;
 }
 
-function anomalias() {
-
+function getFechaAleatoria(start, end) { 
+    let startMillis = start.getTime(); 
+    let endMillis = end.getTime(); 
+    let randomMillis = startMillis + Math.random() * (endMillis - startMillis); 
+    return new Date(randomMillis); 
 }
-
-setInterval(anomalias,30000);
-
 
 function getNumeroAleatorio(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function generarAnomalia() {
+    let numeroAleatorio = getNumeroAleatorio(1,3);
+
+    switch (numeroAleatorio) {
+        case 1:
+            inversionTemporal = true;
+            break;
+        case 2:
+            portalInestable = true;
+            break;
+        case 3:
+            paradojaVisual = true;
+            break;
+    }
+
+    console.log(numeroAleatorio);
+}
+
+setInterval(generarAnomalia,30000);
+generarAnomalia();
+
+function anomaliaPortalInestable() {
+    if (portalInestable && portales.length > 0) {
+        let portalAleatorio = getNumeroAleatorio(1,portales.length);
+
+        console.log("Portal aleatorio: " + portalAleatorio);
+        
+        let portal = null;
+
+        for (let p of portales) {
+            if (p.getIdPortal() == portalAleatorio) {
+                portal = p;
+                break;
+            }
+        }
+
+        let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
+        let fechaFin = new Date(Date.UTC(3000, 11, 31));
+
+        const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
+
+        portal.setFechaDestino(fechaAleatoria);
+
+        console.log(portal);
+    }
+};
+
+setInterval(anomaliaPortalInestable,5000);
+anomaliaPortalInestable();
+
+
+function anomaliaParadojaVisual() {
+    if (paradojaVisual && portales.length > 0) {
+        let childNodes = areaPortales.childNodes;
+
+        for (let childNode of childNodes) {
+            if (childNode.nodeType == 1) {
+                childNode.style.background = getColor();
+            }
+        }
+    }
+}
+
+setInterval(anomaliaParadojaVisual,10000);
+anomaliaParadojaVisual();
