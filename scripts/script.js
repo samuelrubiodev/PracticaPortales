@@ -4,13 +4,12 @@ let mensajeAnomalias = document.querySelector("#mensaje-anomalias");
 let panelViajes = document.querySelector(".viajes");
 let areaPortales = document.querySelector(".area-portales");
 let fecha = document.querySelector("#fecha-actual");
-let seHaViajado = false;
 
+let seHaViajado = false;
 let inversionTemporal = false;
 let portalInestable = false;
 let paradojaVisual = false;
 let seHaGeneradoTiempoRestante = false;
-
 let tiempoRestante = null;
 
 function actualizar() {
@@ -83,6 +82,8 @@ function generarPortal() {
     mensaje.textContent = "";
 
     console.log("Se ha creado el portal: " + nombreCompleto);
+    let audio = new Audio("./audio/bloop.mp3");
+    audio.play();
 
     div.addEventListener("click",()=>{
         let panelActual = panelViajes.querySelector("#portal-viaje");
@@ -153,8 +154,11 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) 
 
     botonEliminar.addEventListener("click",()=> {
         console.log("Se va ha eliminar el portal: " + nombreCompleto)
+        let audio = new Audio("./audio/drop-sound.mp3");
+        audio.play();
         eliminarPortal(idportal);
         div.remove();
+        panelViajes.removeAttribute("class");
     });
 
     botonViajar.addEventListener("click",()=> {
@@ -223,27 +227,32 @@ function cambiarNota(portal, nuevaNota) {
     portal.setAttribute("nota", nuevaNota);
 }
 
-function generarAnomalia() {    
-    let numeroAleatorio = getNumeroAleatorio(1,3);
+let segundosAnomalias = getNumeroAleatorio(30000,60000);
 
-    switch (numeroAleatorio) {
-        case 1:
-            inversionTemporal = true;
-            break;
-        case 2:
-            portalInestable = true;
-            break;
-        case 3:
-            paradojaVisual = true;
-            break;
+function generarAnomalia() {   
+    if (areaPortales.childNodes.length -1 > 0) {
+        segundosAnomalias = getNumeroAleatorio(30000,60000);
+        let numeroAleatorio = getNumeroAleatorio(1,3);
+
+        switch (numeroAleatorio) {
+            case 1:
+                inversionTemporal = true;
+                break;
+            case 2:
+                portalInestable = true;
+                break;
+            case 3:
+                paradojaVisual = true;
+                break;
+        }
+    
+        mensajeAnomalias.textContent = "¡Anomalía detectada! Estabiliza el sistema";
+    
+        console.log("Se ha generado la anomalía: " + numeroAleatorio);
     }
-
-    mensajeAnomalias.textContent = "¡Anomalía detectada! Estabiliza el sistema";
-
-    console.log("Se ha generado la anomalía: " + numeroAleatorio);
 }
 
-setInterval(generarAnomalia,30000);
+setInterval(generarAnomalia,segundosAnomalias);
 generarAnomalia();
 
 function anomaliaPortalInestable() {
@@ -270,18 +279,23 @@ function anomaliaPortalInestable() {
 setInterval(anomaliaPortalInestable,5000);
 anomaliaPortalInestable();
 
+let segundos = 0;
 
 function anomaliaParadojaVisual() {
-    if (paradojaVisual && areaPortales.childNodes.length - 1> 0) {
+    if (paradojaVisual && areaPortales.childNodes.length - 1> 0 && segundos <= 10) {
+        segundos++;
         let childNodes = areaPortales.childNodes;
 
         for (let childNode of childNodes) {
             if (childNode.nodeType == 1) {
                 childNode.style.background = getColor();
+                let tamano = getNumeroAleatorio(1,8) + "em";
+                childNode.style.height = tamano;
+                childNode.style.width = tamano;
             }
         }
     }
 }
 
-setInterval(anomaliaParadojaVisual,10000);
+setInterval(anomaliaParadojaVisual,1000);
 anomaliaParadojaVisual();

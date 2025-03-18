@@ -1,3 +1,8 @@
+@keyframes portal {0% { transform: rotate(0); } 100% { transform: rotate(360deg);} }
+@keyframes portal-fade {0% { opacity: 1; } 100% { opacity: 0;} }
+@keyframes portal-pulsacion {0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1);} }
+@keyframes portal-rebote {from { transform: scale(1); transform-origin: center center; animation-timing-function: ease-out; } 10% { transform: scale(0.91); animation-timing-function: ease-in; } 17% { transform: scale(0.98); animation-timing-function: ease-out; } 33% { transform: scale(0.87); animation-timing-function: ease-in; } 45% { transform: scale(1); animation-timing-function: ease-out;} }
+
 @font-face {
     font-family: 'Orbitron';
     src: url('../fonts/Orbitron-Regular.ttf') format('truetype');
@@ -24,7 +29,11 @@
 }
 
 body {
-    background-color: #676564;
+    background: rgb(46,177,198);
+    background: -moz-linear-gradient(90deg, rgba(46,177,198,1) 0%, rgba(255,0,0,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(46,177,198,1) 0%, rgba(255,0,0,1) 100%);
+    background: linear-gradient(90deg, rgba(46,177,198,1) 0%, rgba(255,0,0,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2eb1c6",endColorstr="#ff0000",GradientType=1);
 }
 
 .menu-panel {
@@ -33,7 +42,12 @@ body {
     align-items: center;
     justify-content: center;
     height: 80vh;
-    border: 2px solid black;
+    border: 10px solid black;
+    background: rgb(21,16,109);
+    background: -moz-linear-gradient(90deg, rgba(21,16,109,1) 12%, rgba(117,225,238,1) 46%, rgba(46,177,198,1) 72%, rgba(0,212,255,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(21,16,109,1) 12%, rgba(117,225,238,1) 46%, rgba(46,177,198,1) 72%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(90deg, rgba(21,16,109,1) 12%, rgba(117,225,238,1) 46%, rgba(46,177,198,1) 72%, rgba(0,212,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#15106d",endColorstr="#00d4ff",GradientType=1);
 }
 
 .reloj-temporal {
@@ -49,35 +63,22 @@ body {
     width: 100%;
 }
 
-#boton-confgurar-portal {
-    width: 15%;
-    height: 10%;
-}
-
-#boton-confgurar-portal:hover {
-    background-color: #cbc6c3;
-}
-
-#boton-portal {
+.boton {
     width: 15%;
     height: 10%;
     margin: 0.5%;
+    border: 2px solid black;
+    background-color: #ffffff;
 }
 
-#boton-portal:hover {
-    background-color: #cbc6c3;
+.boton:hover {
+    background-color: aqua;  
 }
 
 .area-portales {
     display: flex;
     flex-wrap: wrap;
 }
-
-@keyframes portal {0% { transform: rotate(0); } 100% { transform: rotate(360deg);} }
-@keyframes portal-fade {0% { opacity: 1; } 100% { opacity: 0;} }
-@keyframes portal-pulsacion {0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1);} }
-@keyframes portal-rebote {from { transform: scale(1); transform-origin: center center; animation-timing-function: ease-out; } 10% { transform: scale(0.91); animation-timing-function: ease-in; } 17% { transform: scale(0.98); animation-timing-function: ease-out; } 33% { transform: scale(0.87); animation-timing-function: ease-in; } 45% { transform: scale(1); animation-timing-function: ease-out;} }
-
 
 .portal {
     border-radius: 90%;
@@ -86,6 +87,11 @@ body {
     margin:3em 1.5em;
     animation: portal 1s ease 0s 1 normal none;
     transition: width 0.3s ease, height 0.3s ease;
+    border: 5px solid white;
+}
+
+.portal:hover {
+    opacity: 0.5;
 }
 
 .panel-viajes {
@@ -94,7 +100,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 70vh;
-    border: 2px solid black;
+    border: 10px solid black;
 }
 
 #titulo-portal {
@@ -119,4 +125,8 @@ textarea {
 
 #portal-viaje {
     text-align: center;
+}
+
+#mensaje-energia, #mensaje-anomalias {
+    font-family: 'Orbitron',sans-serif;
 }
