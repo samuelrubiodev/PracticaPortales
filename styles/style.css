@@ -56,14 +56,20 @@ body {
 }
 
 @keyframes portal {0% { transform: rotate(0); } 100% { transform: rotate(360deg);} }
+@keyframes portal-fade {0% { opacity: 1; } 100% { opacity: 0;} }
 
 .portal {
     border-radius: 90%;
     height: 7em;
     width: 7em;
     margin:3em 1.5em;
-    animation: portal 1s ease 0s 1 normal none; 
+    animation: portal 1s ease 0s 1 normal none;
     transition: width 0.3s ease, height 0.3s ease;
+}
+
+
+.portal-animacion-fade {
+    animation: portal-fade 1s ease 0s 1 normal none;
 }
 
 .portal:hover {

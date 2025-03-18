@@ -1,6 +1,6 @@
-import Portal from './portal.js'; 
 let botonPortal = document.querySelector("#boton-portal");
-let mensaje = document.querySelector("#mensaje");
+let mensaje = document.querySelector("#mensaje-energia");
+let mensajeAnomalias = document.querySelector("#mensaje-anomalias");
 let panelViajes = document.querySelector(".viajes");
 let areaPortales = document.querySelector(".area-portales");
 let fecha = document.querySelector("#fecha-actual");
@@ -9,10 +9,22 @@ let seHaViajado = false;
 let inversionTemporal = false;
 let portalInestable = false;
 let paradojaVisual = false;
+let seHaGeneradoTiempoRestante = false;
+
+let tiempoRestante = null;
 
 function actualizarFecha() {
     const date = new Date();
-    if (!seHaViajado) {
+
+    if (inversionTemporal && areaPortales.childNodes.length -1 > 0) {
+        if (!seHaGeneradoTiempoRestante) {
+            tiempoRestante = new Date();
+            seHaGeneradoTiempoRestante = true;
+        }
+
+        tiempoRestante.setSeconds(tiempoRestante.getSeconds() - 1);
+        fecha.textContent = tiempoRestante.toISOString();
+    } else if (!seHaViajado) {
         fecha.textContent = date.toISOString();
     }
 
@@ -43,8 +55,6 @@ const colores = [
     'rgba(255, 255, 255, 1)'
 ];
 
-let portales = []
-
 function generarPortal() {
     if (areaPortales.childNodes.length - 1 >= 5) {
         return;
@@ -64,6 +74,7 @@ function generarPortal() {
     div.setAttribute("idportal",numero);
     div.setAttribute("nombre", nombreCompleto);
     div.setAttribute("fechaDestino",fechaAleatoria);
+    div.setAttribute("nota","");
     div.setAttribute("class","portal");
 
     div.style.background = getColor();
@@ -73,13 +84,19 @@ function generarPortal() {
 
     console.log("Se ha creado el portal: " + nombreCompleto);
 
-    let portal = new Portal(nombreCompleto,fechaAleatoria, numero);
-    portales.push(portal);
-
     div.addEventListener("click",()=>{
         let panelActual = panelViajes.querySelector("#portal-viaje");
         if (panelActual) {
             panelActual.remove(); 
+        }
+
+        if (inversionTemporal || portalInestable || paradojaVisual) {
+            inversionTemporal = false;
+            portalInestable = false;
+            paradojaVisual = false;
+            seHaGeneradoTiempoRestante = false;
+            mensajeAnomalias.textContent = "";
+            console.log("Se ha estabilizado el sistema");
         }
 
         seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, div.getAttribute("idportal"));
@@ -154,22 +171,27 @@ function getColor() {
 }
 
 function guardarNota(idPortal, nuevaNota) {
-    for (let portal of portales) {
-        if (portal.getIdPortal() == idPortal) {
-            portal.setNota(nuevaNota);
-            console.log(portal.getNota());
-        }
+    let childNodes = areaPortales.childNodes;
+
+    for (let portal of childNodes) {
+        if (portal.nodeType == 1) {
+            if (portal.getAttribute("idportal") == idPortal) {
+                cambiarNota(portal,nuevaNota);
+            }
+        } 
     }
 }
-
 
 function eliminarPortal(idportal) {
     for (let childNode of areaPortales.childNodes) {
         if (childNode.nodeType == 1) {
             if (childNode.getAttribute("idportal") == idportal) {
-                areaPortales.removeChild(childNode);
+                childNode.setAttribute("class","portal-animacion-fade");
+                childNode.addEventListener("animationend", () =>{
+                    childNode.remove()
+                });
                 seHaViajado = false;
-                console.log("Se ha eliminado el portal: " + idportal)
+                console.log("Se ha eliminado el portal: " + idportal);
                 break;
             }
         } 
@@ -193,7 +215,15 @@ function getNumeroAleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generarAnomalia() {
+function cambiarFecha(portal, nuevaFecha) {
+    portal.setAttribute("fechadestino",nuevaFecha);
+}
+
+function cambiarNota(portal, nuevaNota) {
+    portal.setAttribute("nota", nuevaNota);
+}
+
+function generarAnomalia() {    
     let numeroAleatorio = getNumeroAleatorio(1,3);
 
     switch (numeroAleatorio) {
@@ -208,35 +238,32 @@ function generarAnomalia() {
             break;
     }
 
-    console.log(numeroAleatorio);
+    mensajeAnomalias.textContent = "¡Anomalía detectada! Estabiliza el sistema";
+
+    console.log("Se ha generado la anomalía: " + numeroAleatorio);
 }
 
 setInterval(generarAnomalia,30000);
 generarAnomalia();
 
 function anomaliaPortalInestable() {
-    if (portalInestable && portales.length > 0) {
-        let portalAleatorio = getNumeroAleatorio(1,portales.length);
+    if (portalInestable && areaPortales.childNodes.length -1 > 0) {
+        let portalAleatorio = getNumeroAleatorio(1,areaPortales.childNodes.length - 1);
 
-        console.log("Portal aleatorio: " + portalAleatorio);
-        
-        let portal = null;
+        let childNodes = areaPortales.childNodes;
 
-        for (let p of portales) {
-            if (p.getIdPortal() == portalAleatorio) {
-                portal = p;
-                break;
-            }
+        for (let portal of childNodes) {
+            if (portal.nodeType == 1) {
+                if (portal.getAttribute("idportal") == portalAleatorio) {
+                    let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
+                    let fechaFin = new Date(Date.UTC(3000, 11, 31));
+
+                    const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
+
+                    cambiarFecha(portal, fechaAleatoria);
+                }
+            } 
         }
-
-        let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
-        let fechaFin = new Date(Date.UTC(3000, 11, 31));
-
-        const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
-
-        portal.setFechaDestino(fechaAleatoria);
-
-        console.log(portal);
     }
 };
 
@@ -245,7 +272,7 @@ anomaliaPortalInestable();
 
 
 function anomaliaParadojaVisual() {
-    if (paradojaVisual && portales.length > 0) {
+    if (paradojaVisual && areaPortales.childNodes.length - 1> 0) {
         let childNodes = areaPortales.childNodes;
 
         for (let childNode of childNodes) {
