@@ -100,11 +100,11 @@ function generarPortal() {
             console.log("Se ha estabilizado el sistema");
         }
 
-        seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, div.getAttribute("idportal"));
+        seleccionarPortalPanelViajes(nombreCompleto,fechaAleatoria, div.getAttribute("idportal"), div);
     });
 }
 
-function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) {
+function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, elementoPadre) {
     console.log("Seleccionado el portal: " + nombreCompleto + " con ID " + idportal + " y con  fecha de destino: " + fechaAleatoria);
     panelViajes.setAttribute("class","panel-viajes");
 
@@ -122,6 +122,10 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal) 
     fechaDestino.setAttribute("id","fecha-portal");
 
     let textarea = document.createElement("textarea");
+
+    if (elementoPadre.getAttribute("nota") != null) {
+        textarea.value = elementoPadre.getAttribute("nota");
+    }
 
     textarea.setAttribute("name","nota");
     textarea.setAttribute("id","nota");
