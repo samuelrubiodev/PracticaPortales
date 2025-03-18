@@ -1,3 +1,5 @@
+import { getFechaAleatoria, getNumeroAleatorio, getColor } from './util.js';
+
 let botonPortal = document.querySelector("#boton-portal");
 let mensaje = document.querySelector("#mensaje-energia");
 let mensajeAnomalias = document.querySelector("#mensaje-anomalias");
@@ -42,17 +44,28 @@ botonPortal.addEventListener("click",generarPortal);
 let numero = 0;
 
 const colores = [
-    'rgba(255, 0, 0, 1)',   
-    'rgba(0, 255, 0, 1)',   
-    'rgba(0, 0, 255, 1)',   
-    'rgba(255, 255, 0, 1)', 
-    'rgba(0, 255, 255, 1)',
-    'rgba(255, 0, 255, 1)',
-    'rgba(255, 165, 0, 1)', 
-    'rgba(128, 0, 128, 1)', 
-    'rgba(0, 0, 0, 1)',  
-    'rgba(255, 255, 255, 1)'
+    'rgba(255, 0, 0, 1)', 
+    'rgba(0, 255, 0, 1)',    
+    'rgba(0, 0, 255, 1)',      
+    'rgba(255, 255, 0, 1)',     
+    'rgba(0, 255, 255, 1)',     
+    'rgba(255, 0, 255, 1)',   
+    'rgba(255, 165, 0, 1)',    
+    'rgba(128, 0, 128, 1)',   
+    'rgba(0, 0, 0, 1)',         
+    'rgba(255, 255, 255, 1)', 
+    'rgba(75, 0, 130, 1)',      
+    'rgba(255, 99, 71, 1)',   
+    'rgba(34, 139, 34, 1)',     
+    'rgba(255, 192, 203, 1)', 
+    'rgba(147, 112, 219, 1)', 
+    'rgba(0, 128, 128, 1)',    
+    'rgba(210, 105, 30, 1)',   
+    'rgba(255, 69, 0, 1)',     
+    'rgba(70, 130, 180, 1)',    
+    'rgba(255, 215, 0, 1)'
 ];
+
 
 function generarPortal() {
     if (areaPortales.childNodes.length - 1 >= 5) {
@@ -76,7 +89,7 @@ function generarPortal() {
     div.setAttribute("nota","");
     div.setAttribute("class","portal");
 
-    div.style.background = getColor();
+    div.style.background = getColor(colores);
 
     areaPortales.appendChild(div);
     mensaje.textContent = "";
@@ -137,11 +150,13 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     let botonEliminar = document.createElement("button");
     botonEliminar.setAttribute("type","button");
     botonEliminar.setAttribute("id","boton-cerrar-portal");
+    botonEliminar.setAttribute("class","boton");
     botonEliminar.textContent = "Cerrar portal";
 
     let botonViajar = document.createElement("button");
     botonViajar.setAttribute("type","button");
     botonViajar.setAttribute("id","boton-viajar-portal");
+    botonViajar.setAttribute("class","boton");
     botonViajar.textContent = "Viajar";
 
     div.appendChild(titulo);
@@ -168,14 +183,6 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     botonViajar.addEventListener("click",()=> {
         viajar(fechaAleatoria);
     });
-}
-
-function getColor() {
-    const color1 = getNumeroAleatorio(1,colores.length - 1);
-    const color2 = getNumeroAleatorio(1,colores.length - 1);
-    const color3 = getNumeroAleatorio(1,colores.length - 1);
-
-    return "linear-gradient(90deg, " + colores[color1] + " 10%, " + colores[color2] + " 59%, " + colores[color3] + " 96%)";
 }
 
 function guardarNota(idPortal, nuevaNota) {
@@ -210,17 +217,6 @@ function viajar(fechaPortal) {
     const date = fechaPortal;
     fecha.textContent = date
     seHaViajado = true;
-}
-
-function getFechaAleatoria(start, end) { 
-    let startMillis = start.getTime(); 
-    let endMillis = end.getTime(); 
-    let randomMillis = startMillis + Math.random() * (endMillis - startMillis); 
-    return new Date(randomMillis); 
-}
-
-function getNumeroAleatorio(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function cambiarFecha(portal, nuevaFecha) {
@@ -292,7 +288,7 @@ function anomaliaParadojaVisual() {
 
         for (let childNode of childNodes) {
             if (childNode.nodeType == 1) {
-                childNode.style.background = getColor();
+                childNode.style.background = getColor(colores);
                 let tamano = getNumeroAleatorio(1,8) + "em";
                 childNode.style.height = tamano;
                 childNode.style.width = tamano;

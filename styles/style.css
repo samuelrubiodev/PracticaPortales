@@ -78,7 +78,7 @@ body {
 }
 
 .boton {
-    width: 15%;
+    width: 20%;
     height: 10%;
     margin: 0.5%;
     border: 2px solid black;
@@ -87,6 +87,10 @@ body {
 
 .boton:hover {
     background-color: aqua;  
+}
+
+#boton-oculto {
+    opacity: 0.05;
 }
 
 .area-portales {
@@ -127,6 +131,7 @@ body {
 
 textarea {
     resize: none;
+    border: 2px solid black;
 }
 
 #boton-cerrar-portal {
