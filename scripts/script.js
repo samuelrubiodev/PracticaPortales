@@ -13,7 +13,7 @@ let seHaGeneradoTiempoRestante = false;
 
 let tiempoRestante = null;
 
-function actualizarFecha() {
+function actualizar() {
     const date = new Date();
 
     if (inversionTemporal && areaPortales.childNodes.length -1 > 0) {
@@ -35,8 +35,8 @@ function actualizarFecha() {
     }
 }
 
-setInterval(actualizarFecha, 1000);
-actualizarFecha();
+setInterval(actualizar, 1000);
+actualizar();
 
 botonPortal.addEventListener("click",generarPortal);
 
@@ -186,7 +186,7 @@ function eliminarPortal(idportal) {
     for (let childNode of areaPortales.childNodes) {
         if (childNode.nodeType == 1) {
             if (childNode.getAttribute("idportal") == idportal) {
-                childNode.setAttribute("class","portal-animacion-fade");
+                childNode.style.animation = "portal-fade 1s ease 0s 1 normal none";
                 childNode.addEventListener("animationend", () =>{
                     childNode.remove()
                 });

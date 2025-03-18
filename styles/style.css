@@ -32,7 +32,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 70vh;
+    height: 80vh;
     border: 2px solid black;
 }
 
@@ -41,9 +41,27 @@ body {
     font-family: 'Orbitron-Black',sans-serif;
 }
 
+.menu-personalizacion {
+    display: none;
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: center;
+    width: 100%;
+}
+
+#boton-confgurar-portal {
+    width: 15%;
+    height: 10%;
+}
+
+#boton-confgurar-portal:hover {
+    background-color: #cbc6c3;
+}
+
 #boton-portal {
     width: 15%;
-    height: 10%
+    height: 10%;
+    margin: 0.5%;
 }
 
 #boton-portal:hover {
@@ -57,6 +75,9 @@ body {
 
 @keyframes portal {0% { transform: rotate(0); } 100% { transform: rotate(360deg);} }
 @keyframes portal-fade {0% { opacity: 1; } 100% { opacity: 0;} }
+@keyframes portal-pulsacion {0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1);} }
+@keyframes portal-rebote {from { transform: scale(1); transform-origin: center center; animation-timing-function: ease-out; } 10% { transform: scale(0.91); animation-timing-function: ease-in; } 17% { transform: scale(0.98); animation-timing-function: ease-out; } 33% { transform: scale(0.87); animation-timing-function: ease-in; } 45% { transform: scale(1); animation-timing-function: ease-out;} }
+
 
 .portal {
     border-radius: 90%;
@@ -65,16 +86,6 @@ body {
     margin:3em 1.5em;
     animation: portal 1s ease 0s 1 normal none;
     transition: width 0.3s ease, height 0.3s ease;
-}
-
-
-.portal-animacion-fade {
-    animation: portal-fade 1s ease 0s 1 normal none;
-}
-
-.portal:hover {
-    width: 9em;
-    height: 9em;
 }
 
 .panel-viajes {
