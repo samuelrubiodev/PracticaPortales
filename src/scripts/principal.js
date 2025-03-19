@@ -103,7 +103,9 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     let textarea = document.createElement("textarea");
     let br = document.createElement("br");
     let botonEliminar = document.createElement("button");
+    let imgEliminar = document.createElement("img");
     let botonViajar = document.createElement("button");
+    let imgViajar = document.createElement("img");
     
     div.setAttribute("id","portal-viaje")
     
@@ -121,16 +123,23 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     textarea.setAttribute("id","nota");
     textarea.setAttribute("cols","50");
     textarea.setAttribute("rows","10");
+    textarea.setAttribute("placeholder","Ingrese aquí una nota.");
     
     botonEliminar.setAttribute("type","button");
     botonEliminar.setAttribute("id","boton-cerrar-portal");
-    botonEliminar.setAttribute("class","boton");
-    botonEliminar.textContent = "Cerrar portal";
+    botonEliminar.setAttribute("class","boton-image")
 
     botonViajar.setAttribute("type","button");
     botonViajar.setAttribute("id","boton-viajar-portal");
-    botonViajar.setAttribute("class","boton");
-    botonViajar.textContent = "Viajar";
+    botonViajar.setAttribute("class","boton-image");
+    
+    imgViajar.setAttribute("src","./src/img/travel.svg");
+    imgViajar.setAttribute("alt","Una imagen de un reloj con una flecha hacia atras");
+    imgEliminar.setAttribute("src","./src/img/trash.svg")
+    imgEliminar.setAttribute("alt","Una imagen de una papelera");
+
+    botonViajar.appendChild(imgViajar);
+    botonEliminar.appendChild(imgEliminar);
 
     div.appendChild(titulo);
     div.appendChild(fechaDestino);
@@ -148,7 +157,6 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     });
 
     botonEliminar.addEventListener("click",()=> {
-        console.log("Se va ha eliminar el portal: " + nombreCompleto)
         let audio = new Audio("./src/audio/drop-sound.mp3");
         audio.play();
         scrollView(document.querySelector(".menu-panel"));

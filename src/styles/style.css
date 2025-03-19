@@ -83,14 +83,6 @@ body {
     flex-direction: row;
 }
 
-.boton {
-    width: 15%;
-    height: 10%;
-    margin: 0.5%;
-    border: 2px solid black;
-    background-color: #ffffff;
-}
-
 .boton-image {
     margin: 0.5%;
     background: none;
@@ -113,12 +105,8 @@ body {
     height: 15%;
 }
 
-.boton:hover {
-    background-color: aqua;  
-}
-
 #boton-oculto {
-    opacity: 0.05;
+    opacity: 0;
 }
 
 .area-portales {

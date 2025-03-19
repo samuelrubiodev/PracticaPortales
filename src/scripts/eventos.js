@@ -14,8 +14,10 @@ let tiempoRestante = null;
 let segundos = 0;
 
 botonOculto.addEventListener("click", ()=>{
-    eventoColapsoTemporal();
-    setInterval(eventoColapsoTemporal, 100);
+    if (areaPortales.childNodes.length - 1 > 0) {
+        eventoColapsoTemporal();
+        setInterval(eventoColapsoTemporal, 100);
+    }
 });
 
 function eventoColapsoTemporal () {
@@ -62,7 +64,6 @@ function generarAnomalia() {
         }
     
         mensajeAnomalias.textContent = "¡Anomalía detectada! Estabiliza el sistema";
-    
         console.log("Se ha generado la anomalía: " + numeroAleatorio);
     }
 }
