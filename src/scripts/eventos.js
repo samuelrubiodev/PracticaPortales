@@ -10,13 +10,17 @@ let portalInestable = false;
 let paradojaVisual = false;
 let seHaGeneradoTiempoRestante = false;
 let tiempoRestante = null;
+let colapsoTemporal = false;
 
 let segundos = 0;
+let segundosAnomalias = getNumeroAleatorio(30000,60000);
 
 botonOculto.addEventListener("click", ()=>{
-    if (areaPortales.childNodes.length - 1 > 0) {
+    if (areaPortales.childNodes.length - 1 > 0 && !colapsoTemporal) {
         eventoColapsoTemporal();
         setInterval(eventoColapsoTemporal, 100);
+        colapsoTemporal = true;
+        areaPortales.setAttribute("colapsoTemporal","true");
     }
 });
 
@@ -28,7 +32,7 @@ function eventoColapsoTemporal () {
 
     for (let childNode of areaPortales.childNodes) {
         if (childNode.nodeType == 1) {
-            let posicionTop = getNumeroAleatorio(1,5);
+            let posicionTop = getNumeroAleatorio(1,50);
             let posicionLeft = getNumeroAleatorio(1,90);
             let posicionRight = getNumeroAleatorio(1,90);
 
@@ -39,8 +43,6 @@ function eventoColapsoTemporal () {
         }
     }
 }
-
-let segundosAnomalias = getNumeroAleatorio(30000,60000);
 
 function generarAnomalia() {   
     if (areaPortales.childNodes.length -1 > 0) {

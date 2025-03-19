@@ -11,16 +11,23 @@ let seHaViajado = false;
 let inversionTemporal = false;
 let portalInestable = false;
 let paradojaVisual = false;
+let colapsoTemporal = false;
+
+let id = 0;
 
 areaPortales.setAttribute("inversionTemporal", "false");
 areaPortales.setAttribute("portalInestable","false");
 areaPortales.setAttribute("paradojaVisual","false");
 
+botonPortal.addEventListener("click",generarPortal);
+
 function actualizar() {
+    colapsoTemporal = areaPortales.getAttribute("colapsoTemporal") === "true";
+    
     const date = new Date();
     
-    if (!seHaViajado) {
-        fecha.textContent = date.toISOString();
+    if (!seHaViajado && !colapsoTemporal) {
+        fecha.textContent = date.toLocaleString();
     }
 
     if (areaPortales.childNodes.length - 1 >= 5) {
@@ -33,19 +40,15 @@ function actualizar() {
 setInterval(actualizar, 1000);
 actualizar();
 
-botonPortal.addEventListener("click",generarPortal);
-
-let numero = 0;
-
 function generarPortal() {
     if (areaPortales.childNodes.length - 1 >= 5) {
         return;
     }
 
     let nombreInicial = "Cronosfera Alpha";
-    numero++;
+    id++;
 
-    let nombreCompleto = nombreInicial + "-" + numero;
+    let nombreCompleto = nombreInicial + "-" + id;
 
     let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
     let fechaFin = new Date(Date.UTC(3000, 11, 31));
@@ -53,7 +56,7 @@ function generarPortal() {
     const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
 
     let div = document.createElement("div");
-    div.setAttribute("idportal",numero);
+    div.setAttribute("idportal",id);
     div.setAttribute("nombre", nombreCompleto);
     div.setAttribute("fechaDestino",fechaAleatoria);
     div.setAttribute("nota","");
@@ -157,9 +160,9 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     });
 
     botonEliminar.addEventListener("click",()=> {
+        scrollView(document.querySelector(".menu-panel"));
         let audio = new Audio("./src/audio/drop-sound.mp3");
         audio.play();
-        scrollView(document.querySelector(".menu-panel"));
         eliminarPortal(idportal);
         div.remove();
         panelViajes.removeAttribute("class");
@@ -207,8 +210,8 @@ function viajar(fechaPortal) {
 }
 
 function scrollView(elemento) {
-    window.scrollTo({
-        top: elemento.offsetTop,
-        behavior: "smooth"
-    });
+    elemento.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    })
 }

@@ -5,6 +5,15 @@ let areaPortales = document.querySelector(".area-portales");
 let tamano = document.querySelector("#tamano");
 let efectoVisual = document.querySelector("#efecto-visual");
 
+tamano.addEventListener("input", (event)=>{
+    if (event.target.value < 10 || event.target.value > 300) {
+        event.target.setCustomValidity("El tamaño en px tiene que estar comprendido entre 10-300");
+    } else {
+        event.target.setCustomValidity("");
+    }
+});
+
+
 botonPersonalizacion.addEventListener("click",()=>{
     if (localStorage.getItem("tamano") && localStorage.getItem("efectoVisual")) {
         tamano.value = localStorage.getItem("tamano");
@@ -19,13 +28,15 @@ botonPersonalizacion.addEventListener("click",()=>{
 });
 
 botonGuardar.addEventListener("click",()=>{
-    let tamano = document.querySelector("#tamano").value;
-    let efectoVisual = document.querySelector("#efecto-visual").value;
+    if (tamano.value > 10 || tamano.value <= 300) {
+        let tamano = document.querySelector("#tamano").value;
+        let efectoVisual = document.querySelector("#efecto-visual").value;
 
-    localStorage.setItem("tamano", tamano);
-    localStorage.setItem("efectoVisual",efectoVisual);
+        localStorage.setItem("tamano", tamano);
+        localStorage.setItem("efectoVisual",efectoVisual);
 
-    menuPersonalizacion.style.display = "none"; 
+        menuPersonalizacion.style.display = "none"; 
+    }
 });
 
 function personalizacion() {
