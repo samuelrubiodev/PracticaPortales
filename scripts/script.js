@@ -1,4 +1,4 @@
-import { getFechaAleatoria, getNumeroAleatorio, getColor } from './util.js';
+import { getFechaAleatoria, getColor, cambiarNota, getColores } from './util.js';
 
 let botonPortal = document.querySelector("#boton-portal");
 let mensaje = document.querySelector("#mensaje-energia");
@@ -11,21 +11,15 @@ let seHaViajado = false;
 let inversionTemporal = false;
 let portalInestable = false;
 let paradojaVisual = false;
-let seHaGeneradoTiempoRestante = false;
-let tiempoRestante = null;
+
+areaPortales.setAttribute("inversionTemporal", "false");
+areaPortales.setAttribute("portalInestable","false");
+areaPortales.setAttribute("paradojaVisual","false");
 
 function actualizar() {
     const date = new Date();
-
-    if (inversionTemporal && areaPortales.childNodes.length -1 > 0) {
-        if (!seHaGeneradoTiempoRestante) {
-            tiempoRestante = new Date();
-            seHaGeneradoTiempoRestante = true;
-        }
-
-        tiempoRestante.setSeconds(tiempoRestante.getSeconds() - 1);
-        fecha.textContent = tiempoRestante.toISOString();
-    } else if (!seHaViajado) {
+    
+    if (!seHaViajado) {
         fecha.textContent = date.toISOString();
     }
 
@@ -42,30 +36,6 @@ actualizar();
 botonPortal.addEventListener("click",generarPortal);
 
 let numero = 0;
-
-const colores = [
-    'rgba(255, 0, 0, 1)', 
-    'rgba(0, 255, 0, 1)',    
-    'rgba(0, 0, 255, 1)',      
-    'rgba(255, 255, 0, 1)',     
-    'rgba(0, 255, 255, 1)',     
-    'rgba(255, 0, 255, 1)',   
-    'rgba(255, 165, 0, 1)',    
-    'rgba(128, 0, 128, 1)',   
-    'rgba(0, 0, 0, 1)',         
-    'rgba(255, 255, 255, 1)', 
-    'rgba(75, 0, 130, 1)',      
-    'rgba(255, 99, 71, 1)',   
-    'rgba(34, 139, 34, 1)',     
-    'rgba(255, 192, 203, 1)', 
-    'rgba(147, 112, 219, 1)', 
-    'rgba(0, 128, 128, 1)',    
-    'rgba(210, 105, 30, 1)',   
-    'rgba(255, 69, 0, 1)',     
-    'rgba(70, 130, 180, 1)',    
-    'rgba(255, 215, 0, 1)'
-];
-
 
 function generarPortal() {
     if (areaPortales.childNodes.length - 1 >= 5) {
@@ -89,7 +59,7 @@ function generarPortal() {
     div.setAttribute("nota","");
     div.setAttribute("class","portal");
 
-    div.style.background = getColor(colores);
+    div.style.background = getColor(getColores());
 
     areaPortales.appendChild(div);
     mensaje.textContent = "";
@@ -104,12 +74,18 @@ function generarPortal() {
             panelActual.remove(); 
         }
 
+        inversionTemporal = areaPortales.getAttribute("inversionTemporal") === "true";
+        portalInestable = areaPortales.getAttribute("portalInestable") === "true";
+        paradojaVisual = areaPortales.getAttribute("paradojaVisual") === "true";
+
         if (inversionTemporal || portalInestable || paradojaVisual) {
             inversionTemporal = false;
             portalInestable = false;
             paradojaVisual = false;
-            seHaGeneradoTiempoRestante = false;
             mensajeAnomalias.textContent = "";
+            areaPortales.setAttribute("inversionTemporal", "false");
+            areaPortales.setAttribute("portalInestable","false");
+            areaPortales.setAttribute("paradojaVisual","false");
             console.log("Se ha estabilizado el sistema");
         }
 
@@ -120,21 +96,22 @@ function generarPortal() {
 function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, elementoPadre) {
     console.log("Seleccionado el portal: " + nombreCompleto + " con ID " + idportal + " y con  fecha de destino: " + fechaAleatoria);
     panelViajes.setAttribute("class","panel-viajes");
-
+    
     let div = document.createElement("div");
-    div.setAttribute("id","portal-viaje")
-
     let titulo = document.createElement("h1");
-
+    let fechaDestino = document.createElement("h4");
+    let textarea = document.createElement("textarea");
+    let br = document.createElement("br");
+    let botonEliminar = document.createElement("button");
+    let botonViajar = document.createElement("button");
+    
+    div.setAttribute("id","portal-viaje")
+    
     titulo.textContent = nombreCompleto;
     titulo.setAttribute("id","titulo-portal");
 
-    let fechaDestino = document.createElement("h4");
-
     fechaDestino.textContent = fechaAleatoria;
     fechaDestino.setAttribute("id","fecha-portal");
-
-    let textarea = document.createElement("textarea");
 
     if (elementoPadre.getAttribute("nota") != null) {
         textarea.value = elementoPadre.getAttribute("nota");
@@ -144,16 +121,12 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     textarea.setAttribute("id","nota");
     textarea.setAttribute("cols","50");
     textarea.setAttribute("rows","10");
-
-    let br = document.createElement("br");
-
-    let botonEliminar = document.createElement("button");
+    
     botonEliminar.setAttribute("type","button");
     botonEliminar.setAttribute("id","boton-cerrar-portal");
     botonEliminar.setAttribute("class","boton");
     botonEliminar.textContent = "Cerrar portal";
 
-    let botonViajar = document.createElement("button");
     botonViajar.setAttribute("type","button");
     botonViajar.setAttribute("id","boton-viajar-portal");
     botonViajar.setAttribute("class","boton");
@@ -167,6 +140,9 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     div.appendChild(botonEliminar);
 
     panelViajes.appendChild(div);
+
+    scrollView(botonViajar);
+
     textarea.addEventListener("change", ()=>{
         guardarNota(idportal, textarea.value);
     });
@@ -175,13 +151,16 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
         console.log("Se va ha eliminar el portal: " + nombreCompleto)
         let audio = new Audio("./audio/drop-sound.mp3");
         audio.play();
+        scrollView(document.querySelector(".menu-panel"));
         eliminarPortal(idportal);
         div.remove();
         panelViajes.removeAttribute("class");
+        
     });
 
     botonViajar.addEventListener("click",()=> {
         viajar(fechaAleatoria);
+        scrollView(document.querySelector(".menu-panel"));
     });
 }
 
@@ -219,83 +198,9 @@ function viajar(fechaPortal) {
     seHaViajado = true;
 }
 
-function cambiarFecha(portal, nuevaFecha) {
-    portal.setAttribute("fechadestino",nuevaFecha);
+function scrollView(elemento) {
+    window.scrollTo({
+        top: elemento.offsetTop,
+        behavior: "smooth"
+    });
 }
-
-function cambiarNota(portal, nuevaNota) {
-    portal.setAttribute("nota", nuevaNota);
-}
-
-let segundosAnomalias = getNumeroAleatorio(30000,60000);
-
-function generarAnomalia() {   
-    if (areaPortales.childNodes.length -1 > 0) {
-        segundosAnomalias = getNumeroAleatorio(30000,60000);
-        let numeroAleatorio = getNumeroAleatorio(1,3);
-
-        switch (numeroAleatorio) {
-            case 1:
-                inversionTemporal = true;
-                break;
-            case 2:
-                portalInestable = true;
-                break;
-            case 3:
-                paradojaVisual = true;
-                break;
-        }
-    
-        mensajeAnomalias.textContent = "¡Anomalía detectada! Estabiliza el sistema";
-    
-        console.log("Se ha generado la anomalía: " + numeroAleatorio);
-    }
-}
-
-setInterval(generarAnomalia,segundosAnomalias);
-generarAnomalia();
-
-function anomaliaPortalInestable() {
-    if (portalInestable && areaPortales.childNodes.length -1 > 0) {
-        let portalAleatorio = getNumeroAleatorio(1,areaPortales.childNodes.length - 1);
-
-        let childNodes = areaPortales.childNodes;
-
-        for (let portal of childNodes) {
-            if (portal.nodeType == 1) {
-                if (portal.getAttribute("idportal") == portalAleatorio) {
-                    let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
-                    let fechaFin = new Date(Date.UTC(3000, 11, 31));
-
-                    const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
-
-                    cambiarFecha(portal, fechaAleatoria);
-                }
-            } 
-        }
-    }
-};
-
-setInterval(anomaliaPortalInestable,5000);
-anomaliaPortalInestable();
-
-let segundos = 0;
-
-function anomaliaParadojaVisual() {
-    if (paradojaVisual && areaPortales.childNodes.length - 1> 0 && segundos <= 10) {
-        segundos++;
-        let childNodes = areaPortales.childNodes;
-
-        for (let childNode of childNodes) {
-            if (childNode.nodeType == 1) {
-                childNode.style.background = getColor(colores);
-                let tamano = getNumeroAleatorio(1,8) + "em";
-                childNode.style.height = tamano;
-                childNode.style.width = tamano;
-            }
-        }
-    }
-}
-
-setInterval(anomaliaParadojaVisual,1000);
-anomaliaParadojaVisual();
