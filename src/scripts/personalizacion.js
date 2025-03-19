@@ -8,13 +8,16 @@ let efectoVisual = document.querySelector("#efecto-visual");
 tamano.addEventListener("input", (event)=>{
     if (event.target.value < 10 || event.target.value > 300) {
         event.target.setCustomValidity("El tamaño en px tiene que estar comprendido entre 10-300");
+        event.target.reportValidity();
     } else {
         event.target.setCustomValidity("");
     }
 });
 
 
-botonPersonalizacion.addEventListener("click",()=>{
+botonPersonalizacion.addEventListener("click",(event)=>{
+    event.preventDefault();
+
     if (localStorage.getItem("tamano") && localStorage.getItem("efectoVisual")) {
         tamano.value = localStorage.getItem("tamano");
         efectoVisual.value = localStorage.getItem("efectoVisual");
@@ -28,14 +31,15 @@ botonPersonalizacion.addEventListener("click",()=>{
 });
 
 botonGuardar.addEventListener("click",()=>{
-    if (tamano.value > 10 || tamano.value <= 300) {
-        let tamano = document.querySelector("#tamano").value;
-        let efectoVisual = document.querySelector("#efecto-visual").value;
+    if (tamano.value >= 10 && tamano.value <= 300) {
 
-        localStorage.setItem("tamano", tamano);
-        localStorage.setItem("efectoVisual",efectoVisual);
+        localStorage.setItem("tamano", tamano.value);
+        localStorage.setItem("efectoVisual",efectoVisual.value);
 
         menuPersonalizacion.style.display = "none"; 
+    } else {
+        tamano.setCustomValidity("El tamaño en px tiene que estar comprendido entre 10-300");
+        tamano.reportValidity();
     }
 });
 
