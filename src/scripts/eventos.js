@@ -20,11 +20,7 @@ function eventoColapsoTemporal () {
     let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
     let fechaFin = new Date(Date.UTC(3000, 11, 31));
 
-    let fechaAleatoria = getFechaAleatoria(fechaInicio, fechaFin);
-
-    let fechaFormateada = fechaAleatoria.toISOString().split("T")[0];
-
-    fecha.textContent = fechaFormateada;
+    fecha.textContent = getFechaAleatoria(fechaInicio, fechaFin);
 
     for (let childNode of areaPortales.childNodes) {
         if (childNode.nodeType == 1) {

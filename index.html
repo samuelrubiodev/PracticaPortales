@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal</title>
-    <link rel="stylesheet" href="./styles/style.css">
-    <link rel="icon" type="image/svg+xml" href="./favicon/favicon.svg">
+    <link rel="stylesheet" href="./src/styles/style.css">
+    <link rel="icon" type="image/svg+xml" href="./src/favicon/favicon.svg">
 </head>
 <body>
     <div class="menu-panel">
@@ -14,8 +14,14 @@
             <p id="fecha-actual"></p>
         </div>
 
-        <button type="button" id="boton-confgurar-portal" class="boton">Configurar portales</button>
-        <button type="button" id="boton-portal" class="boton">Generar nuevo portal</button>
+        <div class="botones-configuracion">
+            <button type="button" id="boton-portal" class="boton-image">
+                <img src="./src/img/add.svg"" alt="Un boton para añadir un portal al area de portales">
+            </button>
+            <button type="button" id="boton-confgurar-portal" class="boton-image">
+                <img src="./src/img/settings.svg" alt="Un boton para configurar los portales">
+            </button>
+        </div>
 
         <div class="menu-personalizacion">
             <form action="#">
@@ -41,9 +47,9 @@
     <div class="viajes">
     </div>
 
-    <script type="module" src="./scripts/script.js"></script>
-    <script type="module" src="./scripts/personalizacion.js"></script>
-    <script type="module" src="./scripts/eventos.js"></script>
-    <script type="module" src="./scripts/util.js"></script>
+    <script type="module" src="./src/scripts/script.js"></script>
+    <script type="module" src="./src/scripts/eventos.js"></script>
+    <script type="module" src="./src/scripts/personalizacion.js"></script>
+    <script type="module" src="./src/scripts/util.js"></script>
 </body>
 </html>

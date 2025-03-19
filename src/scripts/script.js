@@ -65,7 +65,7 @@ function generarPortal() {
     mensaje.textContent = "";
 
     console.log("Se ha creado el portal: " + nombreCompleto);
-    let audio = new Audio("./audio/bloop.mp3");
+    let audio = new Audio("./src/audio/bloop.mp3");
     audio.play();
 
     div.addEventListener("click",()=>{
@@ -149,7 +149,7 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
 
     botonEliminar.addEventListener("click",()=> {
         console.log("Se va ha eliminar el portal: " + nombreCompleto)
-        let audio = new Audio("./audio/drop-sound.mp3");
+        let audio = new Audio("./src/audio/drop-sound.mp3");
         audio.play();
         scrollView(document.querySelector(".menu-panel"));
         eliminarPortal(idportal);
