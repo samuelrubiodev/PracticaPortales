@@ -11,6 +11,8 @@ let paradojaVisual = false;
 let seHaGeneradoTiempoRestante = false;
 let tiempoRestante = null;
 
+let segundos = 0;
+
 botonOculto.addEventListener("click", ()=>{
     eventoColapsoTemporal();
     setInterval(eventoColapsoTemporal, 100);
@@ -53,6 +55,7 @@ function generarAnomalia() {
                 areaPortales.setAttribute("portalInestable","true");
                 break;
             case 3:
+                segundos = 0;
                 paradojaVisual = true;
                 areaPortales.setAttribute("paradojaVisual","true");
                 break;
@@ -84,8 +87,6 @@ function anomaliaPortalInestable() {
         }
     }
 };
-
-let segundos = 0;
 
 function anomaliaParadojaVisual() {
     if (paradojaVisual && areaPortales.childNodes.length - 1> 0 && segundos <= 10) {
