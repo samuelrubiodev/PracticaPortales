@@ -108,7 +108,9 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     let botonEliminar = document.createElement("button");
     let imgEliminar = document.createElement("img");
     let botonViajar = document.createElement("button");
+    let botonUp = document.createElement("button");
     let imgViajar = document.createElement("img");
+    let imgUp = document.createElement("img");
     
     div.setAttribute("id","portal-viaje")
     
@@ -135,12 +137,21 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     botonViajar.setAttribute("type","button");
     botonViajar.setAttribute("id","boton-viajar-portal");
     botonViajar.setAttribute("class","boton-image");
+
+    botonUp.setAttribute("type","button");
+    botonUp.setAttribute("id","boton-up-portal");
+    botonUp.setAttribute("class","boton-image");
     
     imgViajar.setAttribute("src","./src/img/travel.svg");
     imgViajar.setAttribute("alt","Una imagen de un reloj con una flecha hacia atras");
+    
     imgEliminar.setAttribute("src","./src/img/trash.svg")
     imgEliminar.setAttribute("alt","Una imagen de una papelera");
-
+    
+    imgUp.setAttribute("src","./src/img/arrow_up.svg");
+    imgUp.setAttribute("alt","Una imagen de una flecha hacia arriba");
+    
+    botonUp.appendChild(imgUp);
     botonViajar.appendChild(imgViajar);
     botonEliminar.appendChild(imgEliminar);
 
@@ -148,6 +159,7 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     div.appendChild(fechaDestino);
     div.appendChild(textarea);
     div.appendChild(br);
+    div.appendChild(botonUp);
     div.appendChild(botonViajar);
     div.appendChild(botonEliminar);
 
@@ -157,6 +169,10 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
 
     textarea.addEventListener("change", ()=>{
         guardarNota(idportal, textarea.value);
+    });
+
+    botonUp.addEventListener("click",()=>{
+        scrollView(document.querySelector(".menu-panel"));
     });
 
     botonEliminar.addEventListener("click",()=> {
