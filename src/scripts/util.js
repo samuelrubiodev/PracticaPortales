@@ -60,4 +60,26 @@ function cambiarNota(portal, nuevaNota) {
     portal.setAttribute("nota", nuevaNota);
 }
 
-export { getFechaAleatoria, getNumeroAleatorio, getColor, cambiarFecha,cambiarNota, getColores };
+function crearBoton(id, ruta, alt) {
+    let boton = document.createElement("button");
+    let img = document.createElement("img");
+    
+    boton.setAttribute("type","button");
+    boton.setAttribute("id", id);
+    boton.setAttribute("class","boton-image");
+
+    img.setAttribute("src",ruta);
+    img.setAttribute("alt",alt);
+
+    boton.appendChild(img);
+    return boton;
+}
+
+function crearElemento(id, texto, nombreElemento) {
+    let elemento = document.createElement(nombreElemento);
+    elemento.setAttribute("id", id);
+    elemento.textContent = texto;
+    return elemento;
+}
+
+export { getFechaAleatoria, getNumeroAleatorio, getColor, cambiarFecha,cambiarNota, getColores, crearBoton, crearElemento };

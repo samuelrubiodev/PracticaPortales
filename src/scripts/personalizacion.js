@@ -5,9 +5,13 @@ let areaPortales = document.querySelector(".area-portales");
 let tamano = document.querySelector("#tamano");
 let efectoVisual = document.querySelector("#efecto-visual");
 
+const MS_PERSONALIZACION = 100;
+
 tamano.addEventListener("input", (event)=>{
-    if (event.target.value < 10 || event.target.value > 300) {
-        event.target.setCustomValidity("El tamaño en px tiene que estar comprendido entre 10-300");
+    let min = parseInt(event.target.min);
+    let max = parseInt(event.target.max);
+    if (event.target.value < min || event.target.value > max) {
+        event.target.setCustomValidity("El tamaño en px tiene que estar comprendido entre " + min + "-" + max);
         event.target.reportValidity();
     } else {
         event.target.setCustomValidity("");
@@ -31,14 +35,16 @@ botonPersonalizacion.addEventListener("click",(event)=>{
 });
 
 botonGuardar.addEventListener("click",()=>{
-    if (tamano.value >= 10 && tamano.value <= 300) {
+    let min = parseInt(tamano.min);
+    let max = parseInt(tamano.max);
+    if (tamano.value >= min && tamano.value <= max) {
 
         localStorage.setItem("tamano", tamano.value);
         localStorage.setItem("efectoVisual",efectoVisual.value);
 
         menuPersonalizacion.style.display = "none"; 
     } else {
-        tamano.setCustomValidity("El tamaño en px tiene que estar comprendido entre 10-300");
+        tamano.setCustomValidity("El tamaño en px tiene que estar comprendido entre " + min + "-" + max);
         tamano.reportValidity();
     }
 });
@@ -65,5 +71,5 @@ function personalizacion() {
     }
 }
 
-setInterval(personalizacion,100);
+setInterval(personalizacion,MS_PERSONALIZACION);
 personalizacion();

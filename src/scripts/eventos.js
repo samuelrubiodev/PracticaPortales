@@ -1,5 +1,15 @@
 import { getFechaAleatoria, getNumeroAleatorio, cambiarFecha, getColores, getColor } from './util.js';
 
+const MS_MIN_GENERACION_ANOMALIA = 30000;
+const MS_MAX_GENERACION_ANOMALIA = 60000;
+const MS_ACTUALIZAR = 1000;
+const MS_PORTAL_INESTABLE = 5000;
+const MS_COLAPSO_TEMPORAL = 100;
+
+const INVERSION_TEMPORAL = 1;
+const PORTAL_INESTABLE = 2;
+const PARADOJA_VISUAL = 3;
+
 let botonOculto = document.querySelector("#boton-oculto");
 let fecha = document.querySelector("#fecha-actual");
 let areaPortales = document.querySelector(".area-portales");
@@ -18,7 +28,7 @@ let segundosAnomalias = getNumeroAleatorio(30000,60000);
 botonOculto.addEventListener("click", ()=>{
     if (areaPortales.childNodes.length - 1 > 0 && !colapsoTemporal) {
         eventoColapsoTemporal();
-        setInterval(eventoColapsoTemporal, 100);
+        setInterval(eventoColapsoTemporal, MS_COLAPSO_TEMPORAL);
         colapsoTemporal = true;
         areaPortales.setAttribute("colapsoTemporal","true");
     }
@@ -46,19 +56,19 @@ function eventoColapsoTemporal () {
 
 function generarAnomalia() {   
     if (areaPortales.childNodes.length -1 > 0) {
-        segundosAnomalias = getNumeroAleatorio(30000,60000);
+        segundosAnomalias = getNumeroAleatorio(MS_MIN_GENERACION_ANOMALIA,MS_MAX_GENERACION_ANOMALIA);
         let numeroAleatorio = getNumeroAleatorio(1,3);
 
         switch (numeroAleatorio) {
-            case 1:
+            case INVERSION_TEMPORAL:
                 inversionTemporal = true;
                 areaPortales.setAttribute("inversionTemporal","true");
                 break;
-            case 2:
+            case PORTAL_INESTABLE:
                 portalInestable = true;
                 areaPortales.setAttribute("portalInestable","true");
                 break;
-            case 3:
+            case PARADOJA_VISUAL:
                 segundos = 0;
                 paradojaVisual = true;
                 areaPortales.setAttribute("paradojaVisual","true");
@@ -119,18 +129,18 @@ function actualizar() {
         }
 
         tiempoRestante.setSeconds(tiempoRestante.getSeconds() - 1);
-        fecha.textContent = tiempoRestante.toISOString();
+        fecha.textContent = tiempoRestante.toLocaleString();
     }
 }
 
-setInterval(actualizar,1000);
+setInterval(actualizar,MS_ACTUALIZAR);
 actualizar();
 
 setInterval(generarAnomalia,segundosAnomalias);
 generarAnomalia();
 
-setInterval(anomaliaPortalInestable,5000);
+setInterval(anomaliaPortalInestable,MS_PORTAL_INESTABLE);
 anomaliaPortalInestable();
 
-setInterval(anomaliaParadojaVisual,1000);
+setInterval(anomaliaParadojaVisual,MS_ACTUALIZAR);
 anomaliaParadojaVisual();

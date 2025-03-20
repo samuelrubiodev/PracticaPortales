@@ -1,4 +1,7 @@
-import { getFechaAleatoria, getColor, cambiarNota, getColores } from './util.js';
+import { getFechaAleatoria, getColor, cambiarNota, getColores, crearBoton, crearElemento } from './util.js';
+
+const MS_ACTUALIZAR = 1000; 
+
 
 let botonPortal = document.querySelector("#boton-portal");
 let mensaje = document.querySelector("#mensaje-energia");
@@ -37,31 +40,29 @@ function actualizar() {
     }
 }
 
-setInterval(actualizar, 1000);
+setInterval(actualizar, MS_ACTUALIZAR);
 actualizar();
 
 function generarPortal() {
     if (areaPortales.childNodes.length - 1 >= 5) {
         return;
     }
-
-    let nombreInicial = "Cronosfera Alpha";
     id++;
 
+    let nombreInicial = "Cronosfera Alpha";
     let nombreCompleto = nombreInicial + "-" + id;
 
     let fechaInicio = new Date(Date.UTC(-2999, 0, 1));
     let fechaFin = new Date(Date.UTC(3000, 11, 31));
-
+    
     const fechaAleatoria = getFechaAleatoria(fechaInicio,fechaFin);
-
     let div = document.createElement("div");
+
     div.setAttribute("idportal",id);
     div.setAttribute("nombre", nombreCompleto);
     div.setAttribute("fechaDestino",fechaAleatoria);
     div.setAttribute("nota","");
     div.setAttribute("class","portal");
-
     div.style.background = getColor(getColores());
 
     areaPortales.appendChild(div);
@@ -82,13 +83,7 @@ function generarPortal() {
         paradojaVisual = areaPortales.getAttribute("paradojaVisual") === "true";
 
         if (inversionTemporal || portalInestable || paradojaVisual) {
-            inversionTemporal = false;
-            portalInestable = false;
-            paradojaVisual = false;
-            mensajeAnomalias.textContent = "";
-            areaPortales.setAttribute("inversionTemporal", "false");
-            areaPortales.setAttribute("portalInestable","false");
-            areaPortales.setAttribute("paradojaVisual","false");
+            estabilizarSistema();
             console.log("Se ha estabilizado el sistema");
         }
 
@@ -96,29 +91,29 @@ function generarPortal() {
     });
 }
 
+function estabilizarSistema() {
+    inversionTemporal = false;
+    portalInestable = false;
+    paradojaVisual = false;
+    mensajeAnomalias.textContent = "";
+
+    areaPortales.setAttribute("inversionTemporal", "false");
+    areaPortales.setAttribute("portalInestable","false");
+    areaPortales.setAttribute("paradojaVisual","false");
+}
+
 function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, elementoPadre) {
     console.log("Seleccionado el portal: " + nombreCompleto + " con ID " + idportal + " y con  fecha de destino: " + fechaAleatoria);
     panelViajes.setAttribute("class","panel-viajes");
     
-    let div = document.createElement("div");
-    let titulo = document.createElement("h1");
-    let fechaDestino = document.createElement("h4");
+    let div = crearElemento("portal-viaje", "", "div");
+    let titulo = crearElemento("titulo-portal", nombreCompleto, "h1");
+    let fechaDestino = crearElemento("fecha-portal", fechaAleatoria, "h4");
     let textarea = document.createElement("textarea");
     let br = document.createElement("br");
-    let botonEliminar = document.createElement("button");
-    let imgEliminar = document.createElement("img");
-    let botonViajar = document.createElement("button");
-    let botonUp = document.createElement("button");
-    let imgViajar = document.createElement("img");
-    let imgUp = document.createElement("img");
-    
-    div.setAttribute("id","portal-viaje")
-    
-    titulo.textContent = nombreCompleto;
-    titulo.setAttribute("id","titulo-portal");
-
-    fechaDestino.textContent = fechaAleatoria;
-    fechaDestino.setAttribute("id","fecha-portal");
+    let botonEliminar = crearBoton("boton-cerrar-portal", "./src/img/trash.svg", "Una imagen de una papelera");
+    let botonViajar = crearBoton("boton-viajar-portal", "./src/img/travel.svg", "Una imagen de un reloj con una flecha hacia atras");
+    let botonUp = crearBoton("boton-up-portal", "./src/img/arrow_up.svg", "Una imagen de una flecha hacia arriba");
 
     if (elementoPadre.getAttribute("nota") != null) {
         textarea.value = elementoPadre.getAttribute("nota");
@@ -129,31 +124,6 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
     textarea.setAttribute("cols","50");
     textarea.setAttribute("rows","10");
     textarea.setAttribute("placeholder","Ingrese aquí una nota.");
-    
-    botonEliminar.setAttribute("type","button");
-    botonEliminar.setAttribute("id","boton-cerrar-portal");
-    botonEliminar.setAttribute("class","boton-image")
-
-    botonViajar.setAttribute("type","button");
-    botonViajar.setAttribute("id","boton-viajar-portal");
-    botonViajar.setAttribute("class","boton-image");
-
-    botonUp.setAttribute("type","button");
-    botonUp.setAttribute("id","boton-up-portal");
-    botonUp.setAttribute("class","boton-image");
-    
-    imgViajar.setAttribute("src","./src/img/travel.svg");
-    imgViajar.setAttribute("alt","Una imagen de un reloj con una flecha hacia atras");
-    
-    imgEliminar.setAttribute("src","./src/img/trash.svg")
-    imgEliminar.setAttribute("alt","Una imagen de una papelera");
-    
-    imgUp.setAttribute("src","./src/img/arrow_up.svg");
-    imgUp.setAttribute("alt","Una imagen de una flecha hacia arriba");
-    
-    botonUp.appendChild(imgUp);
-    botonViajar.appendChild(imgViajar);
-    botonEliminar.appendChild(imgEliminar);
 
     div.appendChild(titulo);
     div.appendChild(fechaDestino);
@@ -192,12 +162,11 @@ function seleccionarPortalPanelViajes(nombreCompleto, fechaAleatoria, idportal, 
 }
 
 function guardarNota(idPortal, nuevaNota) {
-    let childNodes = areaPortales.childNodes;
-
-    for (let portal of childNodes) {
+    for (let portal of areaPortales.childNodes) {
         if (portal.nodeType == 1) {
             if (portal.getAttribute("idportal") == idPortal) {
                 cambiarNota(portal,nuevaNota);
+                break;
             }
         } 
     }
